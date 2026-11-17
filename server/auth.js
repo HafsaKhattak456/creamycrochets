@@ -110,4 +110,5 @@ export function installAuth(app, db) {
       res.json(await db.collection('products').findOne(filter));
     } catch (err) { next(err); }
   });
+  return requireAdmin;
 }
