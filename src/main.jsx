@@ -14,7 +14,7 @@ const priceText = (product) => `${product.starting ? 'From ' : ''}${money(produc
 const whatsappUrl = (message) => `https://wa.me/923026981176?text=${encodeURIComponent(message)}`;
 
 function ProductPhoto({ product, className = '' }) {
-  return <img className={`product-photo ${className}`} src={product.image?.startsWith('/uploads/') ? `http://localhost:5000${product.image}` : product.image} alt={product.name} />;
+  return <img className={`product-photo ${className}`} src={product.image?.startsWith('/uploads/') ? ` ${product.image}` : product.image} alt={product.name} />;
 }
 
 function App() {
@@ -27,7 +27,7 @@ useEffect(() => {
 
   async function loadProducts() {
     try {
-      const response = await fetch('http://localhost:5000/api/products', {
+      const response = await fetch(' /api/products', {
         signal: controller.signal
       });
 
@@ -67,7 +67,7 @@ useEffect(() => {
   async function prepareOrder() {
     setSummary(''); setOrderError(''); setChecking(true);
     try {
-      const response = await fetch('http://localhost:5000/api/products/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart.map(({ id, color, qty }) => ({ id, color, qty })) }) });
+      const response = await fetch('/api/products/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart.map(({ id, color, qty }) => ({ id, color, qty })) }) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Could not check your bag.');
       setCart(data.items);

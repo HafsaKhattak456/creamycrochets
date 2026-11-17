@@ -22,7 +22,7 @@ Your existing MongoDB products are preserved. This update does not import, delet
 ## Checks on your laptop
 
 - Wrong password shows an error; correct credentials show the admin catalog.
-- http://localhost:5000/api/admin/products without authentication returns 401.
+-  /api/admin/products without authentication returns 401.
 - Log out returns to the login form.
 - The shop still loads your existing products through /api/products.
 - Edit the panda description, save, then refresh the shop and open its details to confirm the change. Cancel leaves the database untouched. Keep your existing admin account; do not run create-admin.js again if it already exists.

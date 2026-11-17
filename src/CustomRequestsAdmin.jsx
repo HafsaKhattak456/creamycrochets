@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-const API = 'http://localhost:5000/api/admin/custom-requests';
+const API = '/api/admin/custom-requests';
 const statuses = ['New', 'Discussing', 'Accepted', 'Completed', 'Declined'];
 export default function CustomRequestsAdmin({ token }) {
   const [page, setPage] = useState(1), [data, setData] = useState({ requests: [], hasMore: false }), [busy, setBusy] = useState(false), [error, setError] = useState(''), [message, setMessage] = useState('');

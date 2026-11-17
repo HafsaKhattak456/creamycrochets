@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-const API = 'http://localhost:5000/api/admin/orders';
+const API = '/api/admin/orders';
 const statuses = ['Pending', 'Confirmed', 'Preparing', 'Dispatched', 'Delivered', 'Cancelled'];
 export default function Orders({ token }) {
   const [data, setData] = useState({ orders: [], hasMore: false }), [page, setPage] = useState(1), [error, setError] = useState(''), [busy, setBusy] = useState(false);

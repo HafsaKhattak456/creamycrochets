@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Orders from './Orders.jsx';
 import CustomRequestsAdmin from './CustomRequestsAdmin.jsx';
-const API = 'http://localhost:5000/api/admin';
+const API = ' /api/admin';
 export default function Admin() {
   const [session, setSession] = useState(null);
   const [products, setProducts] = useState([]);
@@ -10,7 +10,7 @@ export default function Admin() {
   const [editing, setEditing] = useState(null);
   const [message, setMessage] = useState('');
   const [photo, setPhoto] = useState(null);
-  const imageUrl = path => path?.startsWith('/uploads/') ? `http://localhost:5000${path}` : path;
+  const imageUrl = path => path?.startsWith('/uploads/') ? ` ${path}` : path;
   const categories = ['Keychains', 'Crochet Toys', 'Custom Clothing', 'Matching Accessories'];
   async function save(event) {
     event.preventDefault(); setBusy(true); setError(''); setMessage('');

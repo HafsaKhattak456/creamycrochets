@@ -1,12 +1,13 @@
+import { createRequestKey } from './requestKey';
 import React, { useRef, useState } from 'react';
 export default function CustomRequest() {
-  const key = useRef(crypto.randomUUID());
+  const key = useRef(createRequestKey());
   const [busy, setBusy] = useState(false), [error, setError] = useState(''), [saved, setSaved] = useState(null);
   async function submit(event) {
     event.preventDefault(); setBusy(true); setError('');
     const form = new FormData(event.currentTarget);
     try {
-      const response = await fetch('http://localhost:5000/api/custom-requests', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key.current }, body: JSON.stringify(Object.fromEntries(form)) });
+      const response = await fetch(' /api/custom-requests', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key.current }, body: JSON.stringify(Object.fromEntries(form)) });
       const data = await response.json(); if (!response.ok) throw new Error(data.message || 'Could not save request.'); setSaved(data);
     } catch (err) { setError(err.message === 'Failed to fetch' ? 'Could not confirm the save. Keep this form open and retry with identical details to avoid duplicates.' : err.message); }
     finally { setBusy(false); }

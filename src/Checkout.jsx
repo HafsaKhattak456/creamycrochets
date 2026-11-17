@@ -1,13 +1,15 @@
+import { createRequestKey } from './requestKey';
 import React, { useRef, useState } from 'react';
+
 export default function Checkout() {
   const [items] = useState(() => { try { const value = JSON.parse(localStorage.getItem('creamy-cart')); return Array.isArray(value) ? value : []; } catch { return []; } });
-  const key = useRef(crypto.randomUUID());
+  const key = useRef(createRequestKey());
   const [busy, setBusy] = useState(false), [error, setError] = useState(''), [order, setOrder] = useState(null);
   async function submit(event) {
     event.preventDefault(); setBusy(true); setError('');
     const form = new FormData(event.currentTarget);
     try {
-      const response = await fetch('http://localhost:5000/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key.current }, body: JSON.stringify({ customer: { name: form.get('name'), phone: form.get('phone'), address: form.get('address'), city: 'Karachi' }, paymentMethod: form.get('paymentMethod'), notes: form.get('notes'), items: items.map(({ id, color, qty }) => ({ id, color, qty })) }) });
+      const response = await fetch(' /api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key.current }, body: JSON.stringify({ customer: { name: form.get('name'), phone: form.get('phone'), address: form.get('address'), city: 'Karachi' }, paymentMethod: form.get('paymentMethod'), notes: form.get('notes'), items: items.map(({ id, color, qty }) => ({ id, color, qty })) }) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Could not save order.');
       setOrder(data); localStorage.removeItem('creamy-cart');
