@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { MongoClient } from 'mongodb';
 import { installAuth } from './auth.js';
+import { installOrderCheck } from './availability.js';
 import { uploadDirectory } from './product-media.js';
 import { fileURLToPath } from 'node:url';
 
@@ -22,6 +23,7 @@ async function startServer() {
 
     const database = client.db(process.env.MONGODB_DB || 'creamycrochets');
     installAuth(app, database);
+    installOrderCheck(app, database);
     const products = database.collection('products');
 
     console.log('Connected to MongoDB');

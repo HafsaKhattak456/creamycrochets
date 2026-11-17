@@ -17,6 +17,8 @@ export async function verifyPassword(password, record) {
 const digest = token => createHash('sha256').update(token).digest('hex');
 export function validateProduct(body) {
       const fields = {};
+      if (body.available !== undefined && typeof body.available !== 'boolean') throw Object.assign(new Error('Availability must be true or false.'), { status: 400 });
+      if (body.available !== undefined) fields.available = body.available;
       const limits = { name: 150, description: 3000, size: 200 };
       for (const [field, limit] of Object.entries(limits)) {
         if (typeof body[field] !== 'string' || !body[field].trim() || body[field].trim().length > limit) throw Object.assign(new Error(`${field} is required and must be at most ${limit} characters.`), { status: 400 });
@@ -72,7 +74,7 @@ export function installAuth(app, db) {
       try { body = JSON.parse(req.body.product); } catch { throw Object.assign(new Error('Invalid product details.'), { status: 400 }); }
       const fields = validateProduct(body || {});
       photo = await savePhoto(req.file);
-      const product = { ...fields, id: randomUUID(), image: photo.path };
+      const product = { available: true, ...fields, id: randomUUID(), image: photo.path };
       const result = await db.collection('products').insertOne(product);
       res.status(201).json({ ...product, _id: result.insertedId });
     } catch (err) { if (photo) await photo.cleanup(); next(err); }
