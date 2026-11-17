@@ -1,6 +1,8 @@
 import { randomBytes, scrypt, timingSafeEqual, createHash } from 'node:crypto';
 import { promisify } from 'node:util';
 import { ObjectId } from 'mongodb';
+import { randomUUID } from 'node:crypto';
+import { photoUpload, savePhoto } from './product-media.js';
 const derive = promisify(scrypt);
 export async function hashPassword(password, salt = randomBytes(16).toString('hex')) {
   const key = await derive(password, salt, 64, { N: 32768, maxmem: 64 * 1024 * 1024 });
@@ -13,6 +15,20 @@ export async function verifyPassword(password, record) {
   return expected.length === received.length && timingSafeEqual(expected, received);
 }
 const digest = token => createHash('sha256').update(token).digest('hex');
+export function validateProduct(body) {
+      const fields = {};
+      const limits = { name: 150, description: 3000, size: 200 };
+      for (const [field, limit] of Object.entries(limits)) {
+        if (typeof body[field] !== 'string' || !body[field].trim() || body[field].trim().length > limit) throw Object.assign(new Error(`${field} is required and must be at most ${limit} characters.`), { status: 400 });
+        fields[field] = body[field].trim();
+      }
+      if (!['Keychains', 'Crochet Toys', 'Custom Clothing', 'Matching Accessories'].includes(body.category)) throw Object.assign(new Error('Choose a valid category.'), { status: 400 });
+      if (typeof body.price !== 'number' || !Number.isFinite(body.price) || body.price <= 0 || body.price > 1000000 || Math.abs(body.price * 100 - Math.round(body.price * 100)) > 0.000001) throw Object.assign(new Error('Price must be between 0.01 and 1,000,000, with at most two decimal places.'), { status: 400 });
+      if (!Array.isArray(body.colors) || !body.colors.length || body.colors.length > 20 || body.colors.some(c => typeof c !== 'string' || !c.trim() || c.trim().length > 80)) throw Object.assign(new Error('Enter 1–20 colour options, each at most 80 characters.'), { status: 400 });
+      if (typeof body.starting !== 'boolean') throw Object.assign(new Error('Starting price must be true or false.'), { status: 400 });
+      Object.assign(fields, { category: body.category, price: body.price, colors: [...new Set(body.colors.map(c => c.trim()))], starting: body.starting });
+  return fields;
+}
 export function installAuth(app, db) {
   const admins = db.collection('admins');
   const sessions = new Map();
@@ -49,6 +65,31 @@ export function installAuth(app, db) {
     next();
   };
   app.get('/api/admin/me', requireAdmin, (req, res) => res.json({ email: req.admin.email }));
+  app.post('/api/admin/products', requireAdmin, photoUpload, async (req, res, next) => {
+    let photo;
+    try {
+      let body;
+      try { body = JSON.parse(req.body.product); } catch { throw Object.assign(new Error('Invalid product details.'), { status: 400 }); }
+      const fields = validateProduct(body || {});
+      photo = await savePhoto(req.file);
+      const product = { ...fields, id: randomUUID(), image: photo.path };
+      const result = await db.collection('products').insertOne(product);
+      res.status(201).json({ ...product, _id: result.insertedId });
+    } catch (err) { if (photo) await photo.cleanup(); next(err); }
+  });
+  app.put('/api/admin/products/:id/photo', requireAdmin, photoUpload, async (req, res, next) => {
+    let photo;
+    try {
+      if (!/^[a-f\d]{24}$/i.test(req.params.id)) throw Object.assign(new Error('Invalid product ID.'), { status: 400 });
+      const filter = { _id: new ObjectId(req.params.id) };
+      const collection = db.collection('products');
+      if (!await collection.findOne(filter)) return res.status(404).json({ message: 'Product not found.' });
+      photo = await savePhoto(req.file);
+      const result = await collection.updateOne(filter, { $set: { image: photo.path } });
+      if (!result.matchedCount) { await photo.cleanup(); return res.status(404).json({ message: 'Product not found.' }); }
+      res.json(await collection.findOne(filter));
+    } catch (err) { if (photo) await photo.cleanup(); next(err); }
+  });
   app.get('/api/admin/products', requireAdmin, async (req, res, next) => {
     try { res.json(await db.collection('products').find({}).sort({ id: 1 }).toArray()); } catch (err) { next(err); }
   });
@@ -60,17 +101,7 @@ export function installAuth(app, db) {
     try {
       if (!/^[a-f\d]{24}$/i.test(req.params.id)) return res.status(400).json({ message: 'Invalid product ID.' });
       const body = req.body || {};
-      const fields = {};
-      const limits = { name: 150, description: 3000, size: 200 };
-      for (const [field, limit] of Object.entries(limits)) {
-        if (typeof body[field] !== 'string' || !body[field].trim() || body[field].trim().length > limit) return res.status(400).json({ message: `${field} is required and must be at most ${limit} characters.` });
-        fields[field] = body[field].trim();
-      }
-      if (!['Keychains', 'Crochet Toys', 'Custom Clothing', 'Matching Accessories'].includes(body.category)) return res.status(400).json({ message: 'Choose a valid category.' });
-      if (typeof body.price !== 'number' || !Number.isFinite(body.price) || body.price <= 0 || body.price > 1000000 || Math.abs(body.price * 100 - Math.round(body.price * 100)) > 0.000001) return res.status(400).json({ message: 'Price must be between 0.01 and 1,000,000, with at most two decimal places.' });
-      if (!Array.isArray(body.colors) || !body.colors.length || body.colors.length > 20 || body.colors.some(c => typeof c !== 'string' || !c.trim() || c.trim().length > 80)) return res.status(400).json({ message: 'Enter 1–20 colour options, each at most 80 characters.' });
-      if (typeof body.starting !== 'boolean') return res.status(400).json({ message: 'Starting price must be true or false.' });
-      Object.assign(fields, { category: body.category, price: body.price, colors: [...new Set(body.colors.map(c => c.trim()))], starting: body.starting });
+      const fields = validateProduct(body);
       const filter = { _id: new ObjectId(req.params.id) };
       const result = await db.collection('products').updateOne(filter, { $set: fields });
       if (!result.matchedCount) return res.status(404).json({ message: 'Product no longer exists. Refresh the catalog.' });

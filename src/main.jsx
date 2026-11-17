@@ -12,7 +12,7 @@ const priceText = (product) => `${product.starting ? 'From ' : ''}${money(produc
 const whatsappUrl = (message) => `https://wa.me/923026981176?text=${encodeURIComponent(message)}`;
 
 function ProductPhoto({ product, className = '' }) {
-  return <img className={`product-photo ${className}`} src={product.image} alt={product.name} />;
+  return <img className={`product-photo ${className}`} src={product.image?.startsWith('/uploads/') ? `http://localhost:5000${product.image}` : product.image} alt={product.name} />;
 }
 
 function App() {
