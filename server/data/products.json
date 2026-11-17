@@ -1,0 +1,132 @@
+[{
+  "_id": {
+    "$oid": "6afbf0f674ef1c66e901ba51"
+  },
+  "id": 1,
+  "name": "Handmade Crochet Panda",
+  "category": "Crochet Toys",
+  "price": 650,
+  "image": "/products/crochet-panda.png",
+  "size": "Hand-sized",
+  "colors": [
+    "Black & white",
+    "Custom colours"
+  ],
+  "description": "A cute hand-sized crochet panda with carefully stitched details, perfect as a small gift or desk companion. Handmade with love.",
+  "starting": false
+},
+{
+  "_id": {
+    "$oid": "6afbf3b174ef1c66e901ba53"
+  },
+  "id": 2,
+  "name": "Crochet Rose Flower Keychain",
+  "category": "Keychains",
+  "price": 550,
+  "image": "/products/rose-keychain.png",
+  "size": "Approximately hand-sized",
+  "colors": [
+    "Red & green",
+    "Custom colours"
+  ],
+  "description": "A handmade crochet rose with green leaves and a hanging loop."
+},
+{
+  "_id": {
+    "$oid": "6afbf3b174ef1c66e901ba54"
+  },
+  "id": 3,
+  "name": "Crochet Bow Keychain",
+  "category": "Keychains",
+  "price": 600,
+  "image": "/products/bow-keychain.png",
+  "size": "Approximately hand-sized",
+  "colors": [
+    "Light blue",
+    "Custom colours"
+  ],
+  "description": "A light-blue crochet bow with flowing tails and a hanging loop."
+},
+{
+  "_id": {
+    "$oid": "6afbf3b174ef1c66e901ba55"
+  },
+  "id": 4,
+  "name": "Crochet Octopus Keychain",
+  "category": "Keychains",
+  "price": 600,
+  "image": "/products/octopus-keychain.png",
+  "size": "Approximately hand-sized",
+  "colors": [
+    "Light pink",
+    "Custom colours"
+  ],
+  "description": "A cute light-pink crochet octopus with stitched eyes and a metal keyring."
+},
+{
+  "_id": {
+    "$oid": "6afbf3b174ef1c66e901ba56"
+  },
+  "id": 5,
+  "name": "Customized Crochet Girls' Frock",
+  "category": "Custom Clothing",
+  "price": 3500,
+  "image": "/products/girls-frock.png",
+  "size": "Shown in a size made for a 10-year-old",
+  "colors": [
+    "Grey & pink",
+    "Custom colours"
+  ],
+  "description": "A handmade grey crochet frock with a flared skirt, pink flower and coordinating ribbon. Colours and size are customizable."
+},
+{
+  "_id": {
+    "$oid": "6afbf3b174ef1c66e901ba57"
+  },
+  "id": 6,
+  "name": "Crochet Flower Cap",
+  "category": "Matching Accessories",
+  "price": 900,
+  "starting": true,
+  "image": "/products/flower-cap.png",
+  "size": "Made to measurement",
+  "colors": [
+    "Grey & pink",
+    "Custom colours"
+  ],
+  "description": "A grey crochet cap decorated with a pink flower. Starting price is provisional and requires seller confirmation."
+},
+{
+  "_id": {
+    "$oid": "6afbf3b174ef1c66e901ba58"
+  },
+  "id": 7,
+  "name": "Crochet Flower Headband",
+  "category": "Matching Accessories",
+  "price": 550,
+  "starting": true,
+  "image": "/products/flower-headband.png",
+  "size": "Made to measurement",
+  "colors": [
+    "Grey & pink",
+    "Custom colours"
+  ],
+  "description": "A grey crochet headband with a pink flower. Starting price is provisional and requires seller confirmation."
+},
+{
+  "_id": {
+    "$oid": "6afbf3b174ef1c66e901ba59"
+  },
+  "id": 8,
+  "name": "Crochet Flower Shoes",
+  "category": "Matching Accessories",
+  "price": 1200,
+  "starting": true,
+  "image": "/products/flower-shoes.png",
+  "size": "Made to measurement",
+  "colors": [
+    "Grey & pink",
+    "Custom colours"
+  ],
+  "description": "A matching pair of grey crochet shoes with pink flower accents. Starting price is provisional and requires seller confirmation."
+}]
