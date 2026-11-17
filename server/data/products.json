@@ -129,4 +129,20 @@
     "Custom colours"
   ],
   "description": "A matching pair of grey crochet shoes with pink flower accents. Starting price is provisional and requires seller confirmation."
+},
+{
+  "_id": {
+    "$oid": "6afc48091df59dbc1a7cb022"
+  },
+  "name": "Crochet Ice Cream Keychain",
+  "description": "Add a scoop of sweetness to your everyday essentials! These handmade crochet ice cream keychains feature a chocolate-brown cone topped with a pastel yellow or mint scoop. Finished with a metal keyring, they’re a cute accessory for keys, bags, or a thoughtful little gift.",
+  "size": "Hand-sized",
+  "category": "Keychains",
+  "price": 450,
+  "colors": [
+    "Pastel yellow or mint with a brown cone."
+  ],
+  "starting": false,
+  "id": "a4aa2cfb-2e79-4101-83da-42e8147b5991",
+  "image": "/uploads/0e135981-2fc9-46c6-8da5-9cbf405c028d.webp"
 }]
