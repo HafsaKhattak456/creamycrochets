@@ -4,6 +4,7 @@ import { MongoClient } from 'mongodb';
 import { installAuth } from './auth.js';
 import { installOrderCheck } from './availability.js';
 import { installOrders } from './orders.js';
+import { installCustomRequests } from './custom-requests.js';
 import { uploadDirectory } from './product-media.js';
 import { fileURLToPath } from 'node:url';
 
@@ -27,6 +28,10 @@ async function startServer() {
     await database.collection('orders').createIndex({ orderNumber: 1 }, { unique: true });
     await database.collection('orders').createIndex({ createdAt: -1 });
     const requireAdmin = installAuth(app, database);
+    await database.collection('customRequests').createIndex({ requestKey: 1 }, { unique: true });
+    await database.collection('customRequests').createIndex({ requestNumber: 1 }, { unique: true });
+    await database.collection('customRequests').createIndex({ createdAt: -1 });
+    installCustomRequests(app, database, requireAdmin);
     installOrders(app, database, requireAdmin);
     installOrderCheck(app, database);
     const products = database.collection('products');
